@@ -33,7 +33,7 @@ changelog = "https://github.com/natleahh/rosalind_problems/blob/master/changelog
 homepage = "https://github.com/natleahh/rosalind_problems"
 
 [project.scripts]
-rosalind_problems = "rosalind_problems.cli:app"
+get_problem = "rosalind_problems.scripts.get_problem:get_problem"
 
 [tool.ty]
 # All rules are enabled as "error" by default; no need to specify unless overriding.
@@ -60,5 +60,7 @@ package = true
 addopts = "--cov=src --cov-report term-missing"
 
 [tool.poetry.group.dev.dependencies]
+pytest = "^8.4.1"
 pytest-cov = "^6.2.1"
+
 
