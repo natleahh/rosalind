@@ -30,7 +30,7 @@ def test_problem_summary_is_generated(tmp_path):
 
 
     # Excercise
-    script.get_problem(problem_name=problem_name, source_dir=tmp_path)
+    script.get_problem(problem_id=problem_name, source_dir=tmp_path)
 
     # Verify
     assert actual_problem_file.read_text() == expected_problem_content
