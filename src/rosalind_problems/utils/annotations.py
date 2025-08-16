@@ -5,3 +5,9 @@ class ProblemSummary(typing.TypedDict):
     as_markdown: str
     sample_data: str
     sample_solution: str
+
+class ProblemFunc(typing.Protocol):
+    """"""
+    
+    def __call__(self, data_set: str) -> str:
+        ...
