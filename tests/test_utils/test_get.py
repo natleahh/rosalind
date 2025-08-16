@@ -17,12 +17,13 @@ def mock_reponse():
 
 def test_data_set(requests_mock):
     """TEST - get.data_set retreives expected input and actual data from Rosalind problem."""
-    requests_mock.get(get.BASE_FORMAT.format("problem/mock_problem/dataset"), text="Input")
+    requests_mock.get(get.DATASET_FORMAT.format(problem_id="mock_problem"), text="Input")
     assert get.data_set("mock_problem", "123", "456") == "Input"
 
-def test_problem(mock_reponse):
+def test_problem(requests_mock):
     """Test - Get problem retreieves expected markdown from Rosalind problem."""
-    mock_reponse.return_value.text = (FIXTURES / "mock_problem.html").read_text()
+    url = get.PROBLEM_FORMAT.format(problem_id="mock_problem")
+    requests_mock.get(url, text=(FIXTURES / "mock_problem.html").read_text())
     expected_summary = {
         "as_markdown": (FIXTURES / "problem.md").read_text(),
         "sample_data": (FIXTURES / "sample_dataset.txt").read_text(),
