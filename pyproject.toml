@@ -1,6 +1,6 @@
 [project]
 name = "rosalind-problems"
-version = "0.2.0"
+version = "0.3.0"
 description = "Repo for code related to to solving rosalind problem and the solutions"
 readme = "README.md"
 authors = [
@@ -38,6 +38,7 @@ homepage = "https://github.com/natleahh/rosalind_problems"
 
 [project.scripts]
 get_problem = "rosalind_problems.scripts.get_problem:main"
+dna = "rosalind_problems.problems.dna.main:main"
 
 [tool.ty]
 # All rules are enabled as "error" by default; no need to specify unless overriding.
