@@ -1,13 +1,13 @@
-""""""
+"""Module for accessing data from Rosalind."""
 import logging
 import re
 import requests
 import bs4
 import html_to_markdown as h2m
 
-from rosalind_problems.utils.annotations import ProblemSummary
-BASE_URL = "https://rosalind.info"
-BASE_FORMAT = "{host}/{path}".format(host=BASE_URL, path="{path}")
+from rosalind_problems.utils import static, annotations
+
+BASE_FORMAT = "{host}/{path}".format(host=static.BASE_URL, path="{path}")
 PROBLEM_FORMAT = BASE_FORMAT.format(
     path="problems/{problem_id}"
 )
@@ -34,13 +34,10 @@ def data_set(problem_id: str, session_id: str, token: str) -> str:
 def _format_markdown(markdown: str):
     """Makes small changes to correctly format markdown summary."""
     # Make urls absolute
-    markdown = re.sub(r"\((\/[\w\d]+[\/|(?\.\w+)]+)\)", fr"({BASE_URL}\1)", markdown)
-    from pathlib import Path
-    Path(".tmp/test.md").write_text(markdown)
-
+    markdown = re.sub(r"\((\/[\w\d]+[\/|(?\.\w+)]+)\)", fr"({static.BASE_URL}\1)", markdown)
     return markdown
 
-def problem(problem_id: str) -> ProblemSummary:
+def problem_summary(problem_id: str) -> annotations.ProblemSummary:
     """Retreives a problem summary from Rosalind.info.
 
     Args:
@@ -49,7 +46,7 @@ def problem(problem_id: str) -> ProblemSummary:
     problem_url = PROBLEM_FORMAT.format(problem_id=problem_id)
     with requests.get(problem_url) as response:
         response.raise_for_status()
-        soup = bs4.BeautifulSoup(response.text)
+        soup = bs4.BeautifulSoup(response.text, features="html.parser")
 
     problem_source = soup.find("div", {"class": "problem-statement problem-statement-bordered"})
     markdown = h2m.convert_to_markdown(str(problem_source))
