@@ -23,10 +23,10 @@ def test_data_set(requests_mock):
 def test_problem(requests_mock):
     """Test - Get problem retreieves expected markdown from Rosalind problem."""
     url = get.PROBLEM_FORMAT.format(problem_id="mock_problem")
-    requests_mock.get(url, text=(FIXTURES / "mock_problem.html").read_text())
+    requests_mock.get(url, text=(FIXTURES / "mock_problem.html").read_text(encoding="utf-8"))
     expected_summary = {
         "as_markdown": (FIXTURES / "problem.md").read_text(),
         "sample_data": (FIXTURES / "sample_dataset.txt").read_text(),
         "sample_solution": (FIXTURES / "sample_solution.txt").read_text()
     }
-    assert get.problem("mock_problem") == expected_summary
+    assert get.problem_summary("mock_problem") == expected_summary

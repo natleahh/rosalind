@@ -1,47 +1,96 @@
 """Tests for get_problem.py"""
+import logging
 from pathlib import Path
 from unittest import mock
 
 import pytest
-from src.rosalind_problems.scripts import get_problem as script
 
-FIXTURES = Path("~tests/test_utils/fixtures")
+from rosalind_problems.scripts import get_problem as script
+
+FIXTURES = Path("tests/fixtures")
+
+def function_get_relative_contents(path: Path) -> set[str]:
+    """FUNCTION - Returns a set of all files in a directory relatively to the directory."""
+    return set(
+        map(
+            lambda p: p.relative_to(path).as_posix(),
+            path.rglob("*")
+        )
+    )
+
 
 @pytest.fixture(autouse=True)
-def _mock_rosalind():
-    """Mocks rosalind problem."""
-    mock.Mock(script.get.problem, FIXTURES / "problem.md")
+def _mock_get_problem_summary():
+    """"""
+    with mock.patch("rosalind_problems.scripts.get_problem.get.problem_summary") as mock_get_problem:
+        mock_get_problem.return_value = {
+        "as_markdown": (FIXTURES / "problem.md").read_text(),
+        "sample_data": (FIXTURES / "sample_dataset.txt").read_text(),
+        "sample_solution": (FIXTURES / "sample_solution.txt").read_text(),
+    }
+        yield mock_get_problem
 
-def test_problem_summary_is_generated(tmp_path):
-    """TEST - Files are created in expected locatations with expected content."""
-    # Set Up
-    expected_problem_content = (FIXTURES / "problem.md").read_text()
-    expected_main_content = (FIXTURES / "main.py").read_text()
-    expected_test_content = (FIXTURES / "mock_test.py").read_text()
-    expected_data_set_content = (FIXTURES / "sample_data.txt").read_text()
-    expected_solution_content = (FIXTURES / "sample_solution.txt").read_text()
-
-    problem_name = "mock_problem"
-    actual_problem_file = tmp_path / f"src/problem/{problem_name}.md"
-    actual_main_file = tmp_path / f"src/problem/main.py"
-    actual_test_file = tmp_path / f"test/test_{problem_name}.py"
-    actual_test_data_set = tmp_path / f"test/test_{problem_name}_sample_dataset.txt"
-    actual_test_solution = tmp_path / f"test/test_{problem_name}_sample_solution.txt"
-
-
-    # Excercise
-    script.get_problem(problem_name=problem_name, source_dir=tmp_path)
-
-    # Verify
-    assert actual_problem_file.read_text() == expected_problem_content
-    assert actual_main_file.read_text() == expected_main_content
-    assert actual_test_file.read_text() == expected_test_content
-    assert actual_test_data_set.read_text() == expected_data_set_content
-    assert actual_test_solution.read_text() == expected_solution_content
+def test_problem_export_summary():
+    """TEST - Files are created in expected locatations with expected content."""      
+    export_summary = script.get_problem(
+        "mock_problem",
+        Path(".")
+    )
+    
+    expected_export_summary_params = [
+        ("./src/rosalind_problems/problems/mock_problem/main.py", FIXTURES / "main.txt"),
+          ("./src/rosalind_problems/problems/mock_problem/problem.md", FIXTURES / "problem.md"),
+          ("./tests/test_problems/test_mock_problem/test_mock_problem.py", FIXTURES / "test.txt"),
+        ("./tests/test_problems/test_mock_problem/fixtures/sample_solution.txt", FIXTURES / "sample_solution.txt"),
+          ("./tests/test_problems/test_mock_problem/fixtures/sample_dataset.txt", FIXTURES / "sample_dataset.txt"),
+    ]
+    
+    expected_export_summary = dict(map(lambda t: (Path(t[0]), t[1].read_text()), expected_export_summary_params))
+        
+    assert dict(expected_export_summary) == export_summary
 
 
+def test_main(monkeypatch, tmp_path):
+    """TEST - main generates expected files."""
+    monkeypatch.setattr(script.static, "GIT_ROOT", tmp_path)
+    
+    expected_problem_dir = tmp_path / "src/rosalind_problems/problems/mock_problem/"
+    expected_problem_files = {"main.py", "problem.md"}
+    expected_testing_dir = tmp_path / "tests/test_problems/test_mock_problem/"
+    expected_testing_files = {"test_mock_problem.py", "fixtures/sample_solution.txt", "fixtures/sample_dataset.txt"}
+    
+    
+    script.main(["mock_problem"])
+        
+    actual_problem_files = function_get_relative_contents(path=expected_problem_dir) & expected_problem_files
+    actual_testing_files = function_get_relative_contents(path=expected_testing_dir) & expected_testing_files
+    
+    assert expected_problem_files == actual_problem_files
+    assert expected_testing_files == actual_testing_files
 
 
-def test_main():
-    """TEST - Command line interface works as expected"""
-    script.main(["mock_name"])
+def test_main_skips_existing_file(monkeypatch, tmp_path, caplog):
+    """FIXTURE - Script skips on user input if file exists."""
+    monkeypatch.setattr(script.static, "GIT_ROOT", tmp_path)
+    monkeypatch.setattr("builtins.input", lambda _: "n")
+    existing_file = tmp_path / "src/rosalind_problems/problems/mock_problem/main.py"
+    existing_file.parent.mkdir(parents=True)
+    existing_file.touch()
+    
+    with caplog.at_level(logging.INFO):
+        script.main(["mock_problem"])
+     
+    assert "Skipping main.py" in caplog.text
+
+
+def test_main_overwrites_existing_file(monkeypatch, tmp_path):
+    """FIXTURE - Script overwrites file on user input if one already exists."""
+    monkeypatch.setattr(script.static, "GIT_ROOT", tmp_path)
+    monkeypatch.setattr("builtins.input", lambda _: "y")
+    existing_file = tmp_path / "src/rosalind_problems/problems/mock_problem/main.py"
+    existing_file.parent.mkdir(parents=True)
+    existing_file.touch()
+            
+    script.main(["mock_problem"])
+     
+    assert existing_file.stat().st_size != 0
