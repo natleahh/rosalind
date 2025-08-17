@@ -1,6 +1,7 @@
 """Tests for {problem_id}."""
+from pathlib import Path
 from rosalind_problems.problems.{problem_id} import main
-from rosalind_problems.utils.testing_utils
+from rosalind_problems.utils import testing_utils
 
 FIXTURES = Path("tests/test_problems/test_{problem_id}/fixtures")
 

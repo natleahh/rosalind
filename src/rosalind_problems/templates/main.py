@@ -1,11 +1,12 @@
 """Solution for {problem_id} Rosalind Problem."""
-from pathlib import Path
 from rosalind_problems.utils import run, cli 
 
 
-def {problem_id}(source_data: str) -> str:
+def {problem_id}(data_set: str) -> str:
     """Code to solve {problem_id}."""
-    return source_data
+	# Your code here
+	solution = data_set
+	return solution
 
 def main(argv: list[str] | None = None):
     """Queries Rosalind for {problem_id} function and returns the result."""
