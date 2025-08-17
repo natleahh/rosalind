@@ -13,8 +13,8 @@ class GetCookies(argparse.ArgumentParser):
 			help=f"Session ID from {static.BASE_URL}. After logging in can be retreived from the Cookies view of you browser's dev mode."
 		)
         self.add_argument(
-			"--session_id",
-			help=f"Session ID from {static.BASE_URL}. After logging in can be retreived from the Cookies view of you browser's dev mode."
+			"--token",
+			help=f"csrf token from {static.BASE_URL}. After logging in can be retreived from the Cookies view of you browser's dev mode."
 		)
         
 class GetProblem(argparse.ArgumentParser):
