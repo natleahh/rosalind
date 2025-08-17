@@ -1,0 +1,11 @@
+"""Tests for mock_problem."""
+from pathlib import Path
+from rosalind_problems.problems.mock_problem import main
+from rosalind_problems.utils import testing_utils
+
+FIXTURES = Path("tests/test_problems/test_mock_problem/fixtures")
+
+def test_mock_problem():
+	"""TEST - main function of mock_problem solved the sample problem."""
+	sample_dataset, sample_solution = testing_utils.get_samples(FIXTURES)
+	assert main.mock_problem(sample_dataset) == sample_solution

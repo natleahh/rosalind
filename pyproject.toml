@@ -1,6 +1,6 @@
 [project]
 name = "rosalind-problems"
-version = "0.1.0"
+version = "0.2.0"
 description = "Repo for code related to to solving rosalind problem and the solutions"
 readme = "README.md"
 authors = [
@@ -15,6 +15,10 @@ classifiers = [
 license = {text = "MIT"}
 dependencies = [
   "typer",
+  "beautifulsoup4 (>=4.13.4,<5.0.0)",
+  "requests (>=2.32.4,<3.0.0)",
+  "html-to-markdown (>=1.9.0,<2.0.0)",
+  "gitpython (>=3.1.45,<4.0.0)",
 ]
 requires-python = ">= 3.10"
 
@@ -33,7 +37,7 @@ changelog = "https://github.com/natleahh/rosalind_problems/blob/master/changelog
 homepage = "https://github.com/natleahh/rosalind_problems"
 
 [project.scripts]
-rosalind_problems = "rosalind_problems.cli:app"
+get_problem = "rosalind_problems.scripts.get_problem:main"
 
 [tool.ty]
 # All rules are enabled as "error" by default; no need to specify unless overriding.
@@ -60,5 +64,7 @@ package = true
 addopts = "--cov=src --cov-report term-missing"
 
 [tool.poetry.group.dev.dependencies]
+pytest = "^8.4.1"
 pytest-cov = "^6.2.1"
+requests-mock = "^1.12.1"
 
