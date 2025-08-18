@@ -41,6 +41,7 @@ get_problem = "rosalind_problems.scripts.get_problem:main"
 dna = "rosalind_problems.problems.dna.main:main"
 rna = "rosalind_problems.problems.rna.main:main"
 revc = "rosalind_problems.problems.revc.main:main"
+gc = "rosalind_problems.problems.gc.main:main"
 
 
 [tool.ty]
