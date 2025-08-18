@@ -19,6 +19,7 @@ dependencies = [
   "requests (>=2.32.4,<3.0.0)",
   "html-to-markdown (>=1.9.0,<2.0.0)",
   "gitpython (>=3.1.45,<4.0.0)",
+  "biopython (>=1.85,<2.0)",
 ]
 requires-python = ">= 3.10"
 
@@ -42,6 +43,7 @@ dna = "rosalind_problems.problems.dna.main:main"
 rna = "rosalind_problems.problems.rna.main:main"
 revc = "rosalind_problems.problems.revc.main:main"
 gc = "rosalind_problems.problems.gc.main:main"
+hamm = "rosalind_problems.problems.hamm.main:main"
 
 
 [tool.ty]
