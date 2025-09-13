@@ -10,10 +10,12 @@ class GetCookies(argparse.ArgumentParser):
         super().__init__(*args, **kwargs)
         self.add_argument(
 			"--session_id",
+            required=False,
 			help=f"Session ID from {static.BASE_URL}. After logging in can be retreived from the Cookies view of you browser's dev mode."
 		)
         self.add_argument(
 			"--token",
+            required=False,
 			help=f"csrf token from {static.BASE_URL}. After logging in can be retreived from the Cookies view of you browser's dev mode."
 		)
         

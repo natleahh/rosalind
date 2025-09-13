@@ -1,6 +1,6 @@
 [project]
 name = "rosalind-problems"
-version = "0.7.0"
+version = "0.7.1"
 description = "Repo for code related to to solving rosalind problem and the solutions"
 readme = "README.md"
 authors = [
