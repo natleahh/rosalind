@@ -7,3 +7,7 @@ def apply_types(types: tuple[type], raw_data: tuple[str]):
 def join_lines(xs: list):
     """"""
     return "\n".join(map(str, xs))
+
+def get_user_email():
+    """"""
+    return input("Email Address: ")
