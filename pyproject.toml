@@ -1,6 +1,6 @@
 [project]
 name = "rosalind-problems"
-version = "0.4.1"
+version = "0.5.0"
 description = "Repo for code related to to solving rosalind problem and the solutions"
 readme = "README.md"
 authors = [
@@ -45,6 +45,7 @@ revc = "rosalind_problems.problems.revc.main:main"
 gc = "rosalind_problems.problems.gc.main:main"
 hamm = "rosalind_problems.problems.hamm.main:main"
 perm = "rosalind_problems.problems.perm.main:main"
+lexf = "rosalind_problems.problems.lexf.main:main"
 
 
 [tool.ty]
