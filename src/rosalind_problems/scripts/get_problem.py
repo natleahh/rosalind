@@ -23,7 +23,7 @@ def get_problem(problem_id: str, source_dir: Path | None = None) -> dict[Path, s
     test_dir = source_dir / f"tests/test_problems/test_{problem_id}"
     
     export_summary = {
-        problem_dir / "main.py" : (static.TEMPLATES / "main.py").read_text().format(problem_id=problem_id),
+        problem_dir / "main.py" : (static.TEMPLATES / "main.py").read_text().format(problem_id=problem_id).replace("    ", "\t"),
         problem_dir / "problem.md": problem_summary["as_markdown"],
         test_dir / f"test_{problem_id}.py": (static.TEMPLATES / "test.py").read_text().format(problem_id=problem_id),
         test_dir / f"fixtures/sample_solution.txt": problem_summary["sample_solution"],

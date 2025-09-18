@@ -45,7 +45,7 @@ def test_problem_export_summary():
           ("./tests/test_problems/test_mock_problem/fixtures/sample_dataset.txt", FIXTURES / "sample_dataset.txt"),
     ]
     
-    expected_export_summary = dict(map(lambda t: (Path(t[0]), t[1].read_text()), expected_export_summary_params))
+    expected_export_summary = dict(map(lambda t: (Path(t[0]), t[1].read_text().replace("    ", "\t")), expected_export_summary_params))
         
     assert dict(expected_export_summary) == export_summary
 
