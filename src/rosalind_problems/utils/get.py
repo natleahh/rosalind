@@ -5,7 +5,7 @@ import requests
 import bs4
 import html_to_markdown as h2m
 
-from rosalind_problems.utils import static, annotations
+from rosalind_problems.utils import static, annotations, tools
 
 BASE_FORMAT = "{host}/{path}".format(host=static.BASE_URL, path="{path}")
 PROBLEM_FORMAT = BASE_FORMAT.format(
@@ -17,13 +17,16 @@ DATASET_FORMAT = BASE_FORMAT.format(
 
 logger = logging.getLogger(__name__)
 
-def data_set(problem_id: str, session_id: str, token: str) -> str:
+def data_set(problem_id: str, session_id: str | None, token: str | None) -> str:
     """Retreived a the dataset of a problem from Rosalind.info."""
     logger.info("Requesting test data from Rosalind.")
-    cookies = {
-        "sessionid": session_id,
-        "csrftoken": token
-    }
+    try:
+        cookies = {
+            "sessionid": session_id or tools.get_env_variable("SESSION_ID"),
+            "csrftoken": token or tools.get_env_variable("CSRF_TOKEN")
+        }
+    except KeyError as e:
+        raise KeyError(f"{e}. Retrieve the value from the Cookies in your browser's dev mode.")
     url = DATASET_FORMAT.format(problem_id=problem_id)
     logger.debug(url)
     with requests.get(url, cookies=cookies) as response:

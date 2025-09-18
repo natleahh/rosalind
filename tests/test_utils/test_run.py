@@ -8,11 +8,11 @@ def function_mock_problem(data_set: str):
 
 def test_run_problems_reports_result_to_std_out(capsys):
     """Run problem exports solution to stdout."""
-    mock.Mock(run.get.data_set).return_value("")
 
-    run.run_problem(
-        func=function_mock_problem,
-        session_id="",
-        token="",
-    )
+    with mock.patch("rosalind_problems.utils.run.get.data_set", return_value=""):
+        run.run_problem(
+            func=function_mock_problem,
+            session_id="sid",
+            token="token",
+        )
     assert capsys.readouterr().out == "The Result!"
